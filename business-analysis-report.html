@@ -49,7 +49,8 @@
   .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 1.5rem; }
   h1,h2,h3,h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15; text-wrap: balance; margin: 0; }
   p { margin: 0 0 1em; color: var(--ink-2); }
-  p, li, td, .callout, .exec-card p { text-align: justify; text-justify: inter-word; hyphens: auto; }
+  p, .callout, .exec-card p { text-align: justify; text-justify: inter-word; hyphens: auto; }
+  li, td { text-align: left; }
   strong { color: var(--ink); font-weight: 650; }
   code { font-family: var(--mono); }
   .tab { font-variant-numeric: tabular-nums; }
@@ -149,7 +150,7 @@
 </style>
 
 <header class="masthead">
-  <div class="wrap">
+  <div class="wrap" lang="en">
     <span class="eyebrow">Client Analysis · Anonymized Portfolio Edition</span>
     <h1>Sales, Customer &amp; Inventory Analysis</h1>
     <div class="meta-row">
@@ -163,7 +164,7 @@
 </header>
 
 <nav class="toc">
-  <div class="wrap">
+  <div class="wrap" lang="en">
     <ol>
       <li><a href="#exec">Executive Summary</a></li>
       <li><a href="#sales">Revenue &amp; Growth</a></li>
@@ -178,7 +179,7 @@
 </nav>
 
 <section id="exec">
-  <div class="wrap">
+  <div class="wrap" lang="en">
     <h2>Executive Summary</h2>
     <p class="dek">Revenue grew 6.5% year-over-year. That headline hides six findings, ranked here by dollar exposure:</p>
 
@@ -224,7 +225,7 @@
 </section>
 
 <section id="sales">
-  <div class="wrap">
+  <div class="wrap" lang="en">
     <h2>Revenue &amp; Growth</h2>
     <p class="dek">Topline growth is real but volatile, with a sharp, recurring seasonal trough.</p>
 
@@ -258,7 +259,7 @@
 </section>
 
 <section id="customer">
-  <div class="wrap">
+  <div class="wrap" lang="en">
     <h2>Customer Health</h2>
     <p class="dek">The customer base didn't just lose accounts: the majority of relationships weakened.</p>
 
@@ -308,7 +309,7 @@
 </section>
 
 <section id="product">
-  <div class="wrap">
+  <div class="wrap" lang="en">
     <h2>Product &amp; SKU Portfolio</h2>
     <p class="dek">A textbook long tail — with one data-quality gap still leaking into the numbers.</p>
 
@@ -334,7 +335,7 @@
 </section>
 
 <section id="regional">
-  <div class="wrap">
+  <div class="wrap" lang="en">
     <h2>Regional &amp; Sales-Officer Performance</h2>
     <p class="dek">Growth is coming from the smaller regions; the core market and one key officer carry outsized weight.</p>
 
@@ -369,7 +370,7 @@
 </section>
 
 <section id="inventory">
-  <div class="wrap">
+  <div class="wrap" lang="en">
     <h2>Inventory &amp; Working Capital Risk</h2>
     <p class="dek">This is the single largest number in the report: <strong>$1.95M</strong> of stock is excess, against $3.83M in annual revenue.</p>
 
@@ -407,7 +408,7 @@
 </section>
 
 <section id="plan">
-  <div class="wrap">
+  <div class="wrap" lang="en">
     <h2>Prioritized Action Plan</h2>
     <p class="dek">Ordered by dollar impact relative to effort required.</p>
 
@@ -482,7 +483,7 @@
 </section>
 
 <section id="notes" style="border-bottom:none;">
-  <div class="wrap">
+  <div class="wrap" lang="en">
     <h2>Methodology &amp; Notes</h2>
     <ul style="color:var(--muted); font-size:.88rem; padding-left:1.1rem;">
       <li>Source: two sales extracts (2024–2025 full year; Jan–Feb 2026 partial) totaling 26,411 transaction line-items, plus a point-in-time stock export (403 SKUs, matched to sales via normalized product code).</li>
@@ -498,7 +499,7 @@
 </section>
 
 <footer>
-  <div class="wrap">
+  <div class="wrap" lang="en">
     <p class="note">Analysis built on the underlying Power BI semantic model (star schema, 50+ DAX measures). Figures here are independently cross-validated against the dashboard's live measures.</p>
     <p class="note">Prepared by M.O. — Data &amp; BI Analyst.</p>
   </div>
