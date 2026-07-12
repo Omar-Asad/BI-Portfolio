@@ -1,0 +1,504 @@
+<title>Sales, Customer & Inventory Analysis — FY24–26</title>
+<style>
+  :root {
+    --paper: #f4f2ee;
+    --surface: #fffdf9;
+    --surface-2: #ece8df;
+    --ink: #171611;
+    --ink-2: #3e3d33;
+    --muted: #6f6d60;
+    --line: #ddd7c9;
+    --accent: #1b5e73;
+    --accent-deep: #123f4e;
+    --good: #157a56;
+    --good-bg: #e5f3ec;
+    --warn: #a8650f;
+    --warn-bg: #faf0e0;
+    --crit: #a83a26;
+    --crit-bg: #fbe8e4;
+    --shadow: 0 1px 2px rgba(18,24,26,.05), 0 6px 20px rgba(18,24,26,.05);
+    --serif: "Iowan Old Style","Charter","Georgia",serif;
+    --sans: system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono: ui-monospace,"SFMono-Regular","Cascadia Code","Consolas",monospace;
+    --maxw: 62rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:#12110d; --surface:#1a1913; --surface-2:#221f17; --ink:#efece3; --ink-2:#cdc9bb;
+      --muted:#9b968a; --line:#34302a; --accent:#58aec9; --accent-deep:#a5d8e8;
+      --good:#3fbd8f; --good-bg:#123024; --warn:#dba24a; --warn-bg:#332309; --crit:#e07a63; --crit-bg:#331712;
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 8px 26px rgba(0,0,0,.4);
+    }
+    .bar-fill .v { color:#12110d; }
+  }
+  :root[data-theme="light"] {
+    --paper:#f4f2ee; --surface:#fffdf9; --surface-2:#ece8df; --ink:#171611; --ink-2:#3e3d33;
+    --muted:#6f6d60; --line:#ddd7c9; --accent:#1b5e73; --accent-deep:#123f4e;
+    --good:#157a56; --good-bg:#e5f3ec; --warn:#a8650f; --warn-bg:#faf0e0; --crit:#a83a26; --crit-bg:#fbe8e4;
+  }
+  :root[data-theme="light"] .bar-fill .v { color:#fff; }
+  :root[data-theme="dark"] {
+    --paper:#12110d; --surface:#1a1913; --surface-2:#221f17; --ink:#efece3; --ink-2:#cdc9bb;
+    --muted:#9b968a; --line:#34302a; --accent:#58aec9; --accent-deep:#a5d8e8;
+    --good:#3fbd8f; --good-bg:#123024; --warn:#dba24a; --warn-bg:#332309; --crit:#e07a63; --crit-bg:#331712;
+  }
+  :root[data-theme="dark"] .bar-fill .v { color:#12110d; }
+
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16.5px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 1.5rem; }
+  h1,h2,h3,h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15; text-wrap: balance; margin: 0; }
+  p { margin: 0 0 1em; color: var(--ink-2); }
+  strong { color: var(--ink); font-weight: 650; }
+  code { font-family: var(--mono); }
+  .tab { font-variant-numeric: tabular-nums; }
+
+  .eyebrow { font-variant-caps: all-small-caps; font-size: .95rem; letter-spacing: .14em; color: var(--muted); }
+
+  header.masthead { padding: 3rem 0 2rem; border-bottom: 3px solid var(--ink); }
+  header.masthead h1 { font-size: clamp(1.9rem, 4.2vw, 2.7rem); margin-top: .8rem; max-width: 24ch; }
+  .meta-row { display:flex; flex-wrap:wrap; gap: 1.6rem; margin-top: 1.4rem; font-family: var(--mono); font-size: .78rem; color: var(--muted); }
+  .meta-row b { color: var(--ink-2); font-weight: 600; }
+
+  nav.toc { padding: 1.4rem 0; border-bottom: 1px solid var(--line); }
+  nav.toc ol { list-style: none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap: .4rem 0; font-family: var(--mono); font-size: .78rem; }
+  nav.toc li { display:flex; align-items:center; }
+  nav.toc a { color: var(--ink-2); text-decoration:none; padding: .3rem .1rem; }
+  nav.toc a:hover { color: var(--accent-deep); }
+  nav.toc li:not(:last-child)::after { content:"—"; color: var(--line); margin: 0 .7rem; }
+
+  section { padding: 2.6rem 0; border-bottom: 1px solid var(--line); }
+  section h2 { font-size: clamp(1.4rem,2.6vw,1.85rem); margin: 0 0 1.1rem; }
+  .dek { max-width: 46ch; font-size: 1.02rem; }
+
+  /* Executive summary cards */
+  .exec-grid { display:grid; grid-template-columns: 1fr; gap: 0; }
+  .exec-card { display:grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: start; padding: 1rem 1.2rem 1.1rem; background: var(--surface); border-bottom: 1px solid var(--line); }
+  .exec-card:first-child { border-top: 1px solid var(--line); }
+  .exec-card .rank { font-family: var(--serif); font-size: 1.5rem; font-weight:700; color: var(--line); width: 2rem; }
+  .exec-card h4 { font-size: 1rem; margin-bottom: .3rem; }
+  .exec-card p { font-size: .88rem; margin: 0; }
+  .impact { font-family: var(--mono); font-size: .82rem; white-space: nowrap; text-align:right; font-weight:600; }
+  .impact.crit { color: var(--crit); }
+  .impact.warn { color: var(--warn); }
+  .impact.good { color: var(--good); }
+
+  /* chips */
+  .chip { display:inline-flex; align-items:center; gap:.35em; font-family: var(--mono); font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; padding:.25em .6em; border-radius:999px; font-weight:600; }
+  .chip.crit { color: var(--crit); background: var(--crit-bg); }
+  .chip.warn { color: var(--warn); background: var(--warn-bg); }
+  .chip.good { color: var(--good); background: var(--good-bg); }
+  .chip.neu { color: var(--accent-deep); background: var(--surface-2); }
+
+  /* stat row */
+  .statrow { display:grid; grid-template-columns: repeat(4,1fr); gap: .8rem; margin: 1.4rem 0; }
+  @media (max-width:720px){ .statrow{ grid-template-columns: repeat(2,1fr);} }
+  .stat { border-top: 2px solid var(--accent); padding: .8rem .15rem 0; }
+  .stat .n { font-family: var(--serif); font-size: 1.5rem; font-weight:600; }
+  .stat .n.crit { color: var(--crit); } .stat .n.good { color: var(--good); } .stat .n.warn { color: var(--warn); }
+  .stat .l { font-family: var(--mono); font-size:.66rem; letter-spacing:.06em; text-transform:uppercase; color: var(--muted); margin-top:.35rem; }
+
+  /* bar chart */
+  .chart { background: var(--surface); border:1px solid var(--line); border-radius: 6px; padding: 1.3rem 1.4rem; margin: 1.2rem 0; }
+  .chart .ct { font-family: var(--mono); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom: 1rem; }
+  .bar-row { display:grid; grid-template-columns: 7.2rem 1fr auto; align-items:center; gap:.65rem; margin:.5rem 0; }
+  .bar-row .bl { font-size:.82rem; color:var(--ink-2); text-align:right; }
+  .bar-track { position:relative; height:1.35rem; background:var(--surface-2); border-radius:4px; overflow:hidden; }
+  .bar-fill { position:absolute; inset:0 auto 0 0; border-radius:4px; display:flex; align-items:center; justify-content:flex-end; }
+  .bar-fill .v { font-family: var(--mono); font-size:.68rem; color:#fff; padding-right:.45rem; white-space:nowrap; }
+  .bar-label-out { font-family: var(--mono); font-size:.72rem; color:var(--muted); font-variant-numeric: tabular-nums; white-space:nowrap; }
+  .fill-a { background: var(--accent); } .fill-b { background: var(--accent-deep); }
+  .fill-good { background: var(--good); } .fill-warn { background: var(--warn); } .fill-crit { background: var(--crit); }
+  .fill-grey { background: var(--muted); }
+
+  /* month heat strip — single-hue ramp, labels outside the fill */
+  .monthstrip { display:grid; grid-template-columns: repeat(12,1fr); gap:5px; margin-top: .6rem; }
+  .mcell { text-align:center; }
+  .mcell .sw { height:1.5rem; border-radius:3px; background: color-mix(in srgb, var(--accent) var(--mix,50%), var(--surface-2)); }
+  .mcell .m { font-family: var(--mono); font-size:.6rem; color: var(--muted); text-transform:uppercase; margin-top:.4rem; }
+  .mcell .idx { font-family: var(--serif); font-size:.95rem; font-weight:700; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .mcell.trough .sw { outline:2px solid var(--crit); outline-offset:1px; }
+  .mcell.trough .idx { color: var(--crit); }
+
+  /* tables */
+  .tbl-wrap { overflow-x:auto; margin: 1rem 0; border:1px solid var(--line); border-radius: 10px; }
+  table { border-collapse: collapse; width:100%; font-size:.85rem; background: var(--surface); }
+  th { text-align:left; font-family: var(--mono); font-size:.66rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); font-weight:600; padding:.65rem .8rem; background: var(--surface-2); border-bottom:1px solid var(--line); white-space:nowrap; }
+  td { padding:.6rem .8rem; border-bottom:1px solid var(--line); color: var(--ink-2); }
+  tr:last-child td { border-bottom:none; }
+  td.num, th.num { text-align:right; font-variant-numeric: tabular-nums; }
+  td.pos { color: var(--good); font-weight:600; }
+  td.neg { color: var(--crit); font-weight:600; }
+
+  /* callout */
+  .callout { border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 10px 10px 0; padding: 1rem 1.3rem; margin: 1.2rem 0; font-size: .92rem; }
+  .callout.crit { border-color: var(--crit); }
+  .callout b { color: var(--ink); }
+
+  /* action plan */
+  .plan-tbl th, .plan-tbl td { vertical-align: top; }
+  .prio { font-family: var(--mono); font-size:.66rem; font-weight:700; letter-spacing:.05em; padding:.2em .55em; border-radius:5px; }
+  .prio.p1 { background: var(--crit-bg); color: var(--crit); }
+  .prio.p2 { background: var(--warn-bg); color: var(--warn); }
+  .prio.p3 { background: var(--good-bg); color: var(--good); }
+
+  footer { padding: 2.4rem 0 3rem; }
+  footer .note { font-size:.82rem; color: var(--muted); max-width: 52ch; }
+  footer .note + .note { margin-top: .6rem; }
+</style>
+
+<header class="masthead">
+  <div class="wrap">
+    <span class="eyebrow">Client Analysis · Anonymized Portfolio Edition</span>
+    <h1>Sales, Customer &amp; Inventory Analysis</h1>
+    <div class="meta-row">
+      <span><b>Period:</b> Jan 2024 – Feb 2026</span>
+      <span><b>Transactions:</b> 26,411</span>
+      <span><b>Customers:</b> 439 · <b>SKUs:</b> 596</span>
+      <span><b>Currency:</b> USD (converted @ 280 PKR/$)</span>
+      <span><b>Identities:</b> anonymized</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <ol>
+      <li><a href="#exec">Executive Summary</a></li>
+      <li><a href="#sales">Revenue &amp; Growth</a></li>
+      <li><a href="#customer">Customer Health</a></li>
+      <li><a href="#product">Product &amp; SKU</a></li>
+      <li><a href="#regional">Regional &amp; Officer</a></li>
+      <li><a href="#inventory">Inventory Risk</a></li>
+      <li><a href="#plan">Action Plan</a></li>
+      <li><a href="#notes">Methodology</a></li>
+    </ol>
+  </div>
+</nav>
+
+<section id="exec">
+  <div class="wrap">
+    <h2>Executive Summary</h2>
+    <p class="dek">Revenue grew 6.5% year-over-year. That headline hides six findings, ranked here by dollar exposure:</p>
+
+    <div class="exec-grid">
+      <div class="exec-card">
+        <div class="rank">1</div>
+        <div><h4>$1.95M is sitting in excess inventory <span class="chip crit">Critical</span></h4>
+        <p>261 of 403 stocked SKUs (65%) hold more than 90 days of cover — together <strong>95% of total stock value</strong>. More than half of one year's revenue is sitting on shelves instead of circulating as cash.</p></div>
+        <div class="impact crit">$1.95M</div>
+      </div>
+      <div class="exec-card">
+        <div class="rank">2</div>
+        <div><h4>Quiet decline outweighs outright churn 12-to-1 <span class="chip crit">Critical</span></h4>
+        <p>90 customers stayed active but shrank their spend, losing <strong>$759K</strong>, compared with $61K lost to the 121 customers who churned completely. Decline among still-active accounts costs twelve times more than outright churn, and it needs account-level attention rather than a win-back campaign.</p></div>
+        <div class="impact crit">−$759K</div>
+      </div>
+      <div class="exec-card">
+        <div class="rank">3</div>
+        <div><h4>Sindh is shrinking while carrying 64% of revenue <span class="chip warn">Warning</span></h4>
+        <p>The largest region declined <strong>5.5%</strong> year-over-year even as smaller regions grew 20–76%. A flat national number is masking an erosion in the core market.</p></div>
+        <div class="impact warn">−5.5%</div>
+      </div>
+      <div class="exec-card">
+        <div class="rank">4</div>
+        <div><h4>Two accounts explain 44% of all customer-level revenue decline <span class="chip warn">Warning</span></h4>
+        <p>The two largest declining accounts (−$299K and −$137K) together account for $436K of the $759K quiet-decline total, so direct outreach on just these two accounts would meaningfully move the number.</p></div>
+        <div class="impact warn">−$436K</div>
+      </div>
+      <div class="exec-card">
+        <div class="rank">5</div>
+        <div><h4>18.9% of SKUs drive 80% of revenue <span class="chip neu">Structural</span></h4>
+        <p>Classic long-tail: 245 SKUs (58%) contribute only 5% of revenue. A rationalization pass on the C-class tail would simplify operations with minimal revenue risk.</p></div>
+        <div class="impact good">Opportunity</div>
+      </div>
+      <div class="exec-card">
+        <div class="rank">6</div>
+        <div><h4>One sales officer drives 28% of two-year revenue <span class="chip warn">Warning</span></h4>
+        <p>Officer 12 alone generated $2.25M. A second officer's $500K book sits entirely on a single customer. Both are key-person concentration risks worth formal succession planning.</p></div>
+        <div class="impact warn">Key-person risk</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sales">
+  <div class="wrap">
+    <h2>Revenue &amp; Growth</h2>
+    <p class="dek">Topline growth is real but volatile, with a sharp, recurring seasonal trough.</p>
+
+    <div class="statrow">
+      <div class="stat"><div class="n">$3.59M <span style="font-size:.7em;color:var(--muted)">→</span> $3.83M</div><div class="l">2024 → 2025 revenue</div></div>
+      <div class="stat"><div class="n good">+6.5%</div><div class="l">Year-over-year growth</div></div>
+      <div class="stat"><div class="n">$611K</div><div class="l">2026 YTD (Jan–Feb)</div></div>
+      <div class="stat"><div class="n warn">±25%</div><div class="l">Typical month-to-month swing</div></div>
+    </div>
+
+    <div class="chart">
+      <div class="ct">Seasonality index by calendar month — 100 = average month (2024–25 actuals)</div>
+      <div class="monthstrip">
+        <div class="mcell" style="--mix:89%"><div class="sw"></div><div class="m">Jan</div><div class="idx">124</div></div>
+        <div class="mcell" style="--mix:58%"><div class="sw"></div><div class="m">Feb</div><div class="idx">98</div></div>
+        <div class="mcell" style="--mix:47%"><div class="sw"></div><div class="m">Mar</div><div class="idx">89</div></div>
+        <div class="mcell trough" style="--mix:13%"><div class="sw"></div><div class="m">Apr</div><div class="idx">61</div></div>
+        <div class="mcell" style="--mix:58%"><div class="sw"></div><div class="m">May</div><div class="idx">98</div></div>
+        <div class="mcell" style="--mix:46%"><div class="sw"></div><div class="m">Jun</div><div class="idx">88</div></div>
+        <div class="mcell" style="--mix:89%"><div class="sw"></div><div class="m">Jul</div><div class="idx">124</div></div>
+        <div class="mcell" style="--mix:71%"><div class="sw"></div><div class="m">Aug</div><div class="idx">109</div></div>
+        <div class="mcell" style="--mix:82%"><div class="sw"></div><div class="m">Sep</div><div class="idx">118</div></div>
+        <div class="mcell" style="--mix:62%"><div class="sw"></div><div class="m">Oct</div><div class="idx">102</div></div>
+        <div class="mcell" style="--mix:62%"><div class="sw"></div><div class="m">Nov</div><div class="idx">102</div></div>
+        <div class="mcell" style="--mix:46%"><div class="sw"></div><div class="m">Dec</div><div class="idx">88</div></div>
+      </div>
+    </div>
+
+    <p>April is a reliable trough (index 61, 39% below average) in both 2024 and 2025, and the broader Dec–Mar stretch runs soft too. That pattern lines up with typical institutional/hospital procurement budget cycles rather than random noise, so cash flow, stock builds, and sales-officer targets can be planned around a known cycle instead of reacting to each dip as a surprise.</p>
+  </div>
+</section>
+
+<section id="customer">
+  <div class="wrap">
+    <h2>Customer Health</h2>
+    <p class="dek">The customer base didn't just lose accounts: the majority of relationships weakened.</p>
+
+    <div class="statrow">
+      <div class="stat"><div class="n">324</div><div class="l">Active customers, 2024</div></div>
+      <div class="stat"><div class="n crit">211 <span style="font-size:.55em;color:var(--muted)">(65%)</span></div><div class="l">Churned or declined</div></div>
+      <div class="stat"><div class="n">112</div><div class="l">Grew year-over-year</div></div>
+      <div class="stat"><div class="n">30</div><div class="l">Customers = 80% of revenue</div></div>
+    </div>
+
+    <div class="chart">
+      <div class="ct">Customer status, 2024 → 2025 (count of customers)</div>
+      <div class="bar-row"><div class="bl">Decreased</div><div class="bar-track"><div class="bar-fill fill-warn" style="width:80.4%"><span class="v">90 · −$759K</span></div></div></div>
+      <div class="bar-row"><div class="bl">Lost / Churned</div><div class="bar-track"><div class="bar-fill fill-crit" style="width:100%"><span class="v">121 · −$61K</span></div></div></div>
+      <div class="bar-row"><div class="bl">Increased</div><div class="bar-track"><div class="bar-fill fill-good" style="width:92.9%"><span class="v">112 · +$992K</span></div></div></div>
+      <div class="bar-row"><div class="bl">New</div><div class="bar-track"><div class="bar-fill fill-a" style="width:82.6%"><span class="v">100 · +$63K</span></div></div></div>
+    </div>
+    <p style="font-size:.85rem;color:var(--muted);margin-top:-.6rem;">Bar length = customer count; label shows customer count and net dollar impact. Note the inversion: <em>Lost</em> has more customers than dollars, <em>Decreased</em> has fewer customers than dollars. Churn count and churn cost point at different problems.</p>
+
+    <div class="callout crit"><b>Where to actually spend effort:</b> the 121 fully-churned accounts were small (averaging $506 each), so a low-cost automated win-back campaign is the right tool there. The 90 quiet decliners are a different animal: they average $8,435 each in lost value and they're still on the books, which means direct account management can reach them before they churn outright too.</div>
+
+    <h3 style="margin:1.6rem 0 .8rem;font-size:1.05rem;">Largest movers, 2024 → 2025</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Account</th><th class="num">2024</th><th class="num">2025</th><th class="num">Change</th><th>Direction</th></tr></thead>
+        <tbody>
+          <tr><td>Largest decliner</td><td class="num tab">$646,495</td><td class="num tab">$347,078</td><td class="num tab neg">−$299,417</td><td><span class="chip crit">Declining</span></td></tr>
+          <tr><td>2nd largest decliner</td><td class="num tab">$367,222</td><td class="num tab">$229,917</td><td class="num tab neg">−$137,306</td><td><span class="chip crit">Declining</span></td></tr>
+          <tr><td>Top grower</td><td class="num tab">$754</td><td class="num tab">$200,106</td><td class="num tab pos">+$199,352</td><td><span class="chip good">Growing</span></td></tr>
+          <tr><td>2nd top grower</td><td class="num tab">$5,143</td><td class="num tab">$146,031</td><td class="num tab pos">+$140,889</td><td><span class="chip good">Growing</span></td></tr>
+          <tr><td>3rd top grower</td><td class="num tab">$73,775</td><td class="num tab">$200,400</td><td class="num tab pos">+$126,625</td><td><span class="chip good">Growing</span></td></tr>
+          <tr><td>4th top grower</td><td class="num tab">$153,423</td><td class="num tab">$246,761</td><td class="num tab pos">+$93,338</td><td><span class="chip good">Growing</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.85rem;color:var(--muted);">The top two growers jumped from near-zero to six figures — worth confirming whether these are durable relationships or one-off tender wins, since the latter won't repeat without active pursuit of the next tender cycle.</p>
+
+    <h3 style="margin:1.6rem 0 .8rem;font-size:1.05rem;">Revenue concentration</h3>
+    <div class="statrow">
+      <div class="stat"><div class="n">56.9%</div><div class="l">Revenue from top 10 customers</div></div>
+      <div class="stat"><div class="n">72.6%</div><div class="l">Revenue from top 20 customers</div></div>
+      <div class="stat"><div class="n">6.8%</div><div class="l">Of customers drive 80% of revenue</div></div>
+      <div class="stat"><div class="n">463</div><div class="l">HHI — no single dominant account</div></div>
+    </div>
+    <p>Concentration is real but distributed across a cohort of ~30 accounts rather than one or two names (HHI of 463 rules out single-customer dependency). The risk to manage is <strong>cohort-level</strong>: a formal top-30 account program, not a single-client contingency plan.</p>
+  </div>
+</section>
+
+<section id="product">
+  <div class="wrap">
+    <h2>Product &amp; SKU Portfolio</h2>
+    <p class="dek">A textbook long tail — with one data-quality gap still leaking into the numbers.</p>
+
+    <div class="chart">
+      <div class="ct">ABC classification — share of SKUs vs. share of revenue</div>
+      <div class="bar-row"><div class="bl">Class A</div><div class="bar-track"><div class="bar-fill fill-good" style="width:100%"></div></div><span class="bar-label-out">80 SKUs (19%) → 80% of revenue</span></div>
+      <div class="bar-row"><div class="bl">Class B</div><div class="bar-track"><div class="bar-fill fill-warn" style="width:24.8%"></div></div><span class="bar-label-out">99 SKUs (23%) → 15% of revenue</span></div>
+      <div class="bar-row"><div class="bl">Class C</div><div class="bar-track"><div class="bar-fill fill-crit" style="width:8.1%"></div></div><span class="bar-label-out">245 SKUs (58%) → 5% of revenue</span></div>
+    </div>
+
+    <div class="chart">
+      <div class="ct">Revenue by product category (USD)</div>
+      <div class="bar-row"><div class="bl">Suture</div><div class="bar-track"><div class="bar-fill fill-a" style="width:100%"><span class="v">$3.10M</span></div></div></div>
+      <div class="bar-row"><div class="bl">Drapes</div><div class="bar-track"><div class="bar-fill fill-a" style="width:79%"><span class="v">$2.45M</span></div></div></div>
+      <div class="bar-row"><div class="bl">CSSD</div><div class="bar-track"><div class="bar-fill fill-a" style="width:27.3%"><span class="v">$0.84M</span></div></div></div>
+      <div class="bar-row"><div class="bl">Hemostat</div><div class="bar-track"><div class="bar-fill fill-a" style="width:13.1%"><span class="v">$0.40M</span></div></div></div>
+      <div class="bar-row"><div class="bl">Gowns</div><div class="bar-track"><div class="bar-fill fill-a" style="width:12.7%"><span class="v">$0.39M</span></div></div></div>
+    </div>
+    <div class="callout crit"><b>Data-quality note:</b> the Drapes figure above ($2.45M) already merges a lowercase "drapes" entry ($148,928) that the source system recorded as a separate category, split only by inconsistent capitalization. The merge is a 5-minute fix at the source; until it's applied there, every fresh export needs the same manual correction (see action plan, P3).</div>
+
+    <p>245 Class-C SKUs generate 5% of revenue between them — an average of roughly $1,650 in annual revenue each. Every one of them still carries listing, warehousing, and stock-count overhead.</p>
+  </div>
+</section>
+
+<section id="regional">
+  <div class="wrap">
+    <h2>Regional &amp; Sales-Officer Performance</h2>
+    <p class="dek">Growth is coming from the smaller regions; the core market and one key officer carry outsized weight.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Region</th><th class="num">Revenue</th><th class="num">Customers</th><th class="num">Rev / Customer</th><th class="num">YoY</th></tr></thead>
+        <tbody>
+          <tr><td>Sindh</td><td class="num tab">$5.13M</td><td class="num tab">218</td><td class="num tab">$23,550</td><td class="num tab neg">−5.5%</td></tr>
+          <tr><td>Punjab</td><td class="num tab">$2.13M</td><td class="num tab">161</td><td class="num tab">$13,227</td><td class="num tab pos">+20.3%</td></tr>
+          <tr><td>KPK &amp; Balochistan</td><td class="num tab">$0.76M</td><td class="num tab">48</td><td class="num tab">$15,804</td><td class="num tab pos">+76.0%</td></tr>
+          <tr><td>Unmapped ("Not Found")</td><td class="num tab">$6,686</td><td class="num tab">12</td><td class="num tab">$557</td><td class="num tab">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Sindh is 64% of revenue and shrinking. KPK &amp; Balochistan is the smallest region and growing fastest off a low base, which is easy to get excited about but is still a small dollar number. Punjab's +20.3% on a $2.1M base is the more durable growth story of the three. Separately, 12 customers are entirely unmapped to a region, a small gap but one that blocks accurate regional reporting until it's fixed.</p>
+
+    <h3 style="margin:1.6rem 0 .8rem;font-size:1.05rem;">Sales officer performance</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Officer</th><th class="num">Revenue</th><th class="num">Customers</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Officer 12</td><td class="num tab">$2.25M</td><td class="num tab">31</td><td><span class="chip warn">28% of total book</span></td></tr>
+          <tr><td>Officer 9</td><td class="num tab">$1.09M</td><td class="num tab">18</td><td>—</td></tr>
+          <tr><td>Officer 2</td><td class="num tab">$0.78M</td><td class="num tab">35</td><td>—</td></tr>
+          <tr><td>Officer 3</td><td class="num tab">$0.50M</td><td class="num tab">1</td><td><span class="chip crit">Single-account risk</span></td></tr>
+          <tr><td colspan="4" style="color:var(--muted);font-style:italic;">⋯ 5 officers below $6K revenue, several on a single account ⋯</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Officer 12 alone represents more revenue than the bottom ~20 officers combined. Officer 3's entire book is one customer; if either the officer or that customer leaves, $500K (13% of 2025 revenue) is immediately at risk.</p>
+  </div>
+</section>
+
+<section id="inventory">
+  <div class="wrap">
+    <h2>Inventory &amp; Working Capital Risk</h2>
+    <p class="dek">This is the single largest number in the report: <strong>$1.95M</strong> of stock is excess, against $3.83M in annual revenue.</p>
+
+    <div class="statrow">
+      <div class="stat"><div class="n">914K</div><div class="l">Units in stock, 403 SKUs</div></div>
+      <div class="stat"><div class="n crit">~$2.05M</div><div class="l">Estimated stock value</div></div>
+      <div class="stat"><div class="n crit">65%</div><div class="l">Of SKUs are overstocked</div></div>
+      <div class="stat"><div class="n">38</div><div class="l">SKUs at stockout risk</div></div>
+    </div>
+
+    <div class="chart">
+      <div class="ct">Stock value by status (estimated, USD)</div>
+      <div class="bar-row"><div class="bl">Excess (&gt;90d)</div><div class="bar-track"><div class="bar-fill fill-crit" style="width:100%"><span class="v">$1.95M · 261 SKUs</span></div></div></div>
+      <div class="bar-row"><div class="bl">Dead (0 sales)</div><div class="bar-track"><div class="bar-fill fill-warn" style="width:0.5%"></div></div><span class="bar-label-out">$10.5K · 75 SKUs</span></div>
+      <div class="bar-row"><div class="bl">OK / Short</div><div class="bar-track"><div class="bar-fill fill-good" style="width:4.8%"></div></div><span class="bar-label-out">~$92K · 66 SKUs</span></div>
+    </div>
+
+    <div class="callout crit"><b>Where to start:</b> the excess is heavily concentrated. The top 10 excess SKUs alone account for roughly $0.5M of the $1.95M total, so a liquidation push on a short list moves most of the number without touching all 261 SKUs at once.</div>
+
+    <h3 style="margin:1.6rem 0 .8rem;font-size:1.05rem;">Highest-value excess SKUs</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>SKU</th><th class="num">Stock Qty</th><th class="num">Sales, L12M</th><th class="num">Days of Cover</th><th class="num">Est. Value Tied Up</th></tr></thead>
+        <tbody>
+          <tr><td>DW8515S</td><td class="num tab">53,390</td><td class="num tab">39,130</td><td class="num tab">498</td><td class="num tab neg">$146,849</td></tr>
+          <tr><td>DW11515S</td><td class="num tab">30,971</td><td class="num tab">19,890</td><td class="num tab">568</td><td class="num tab neg">$83,045</td></tr>
+          <tr><td>DP-0020</td><td class="num tab">4,100</td><td class="num tab">9,210</td><td class="num tab">163</td><td class="num tab neg">$89,378</td></tr>
+          <tr><td>DD-0019</td><td class="num tab">3,660</td><td class="num tab">13,940</td><td class="num tab">96</td><td class="num tab neg">$61,121</td></tr>
+          <tr><td>SD9128D</td><td class="num tab">288</td><td class="num tab">1</td><td class="num tab">105,120</td><td class="num tab neg">$30,618</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.85rem;color:var(--muted);">SD9128D has sold <strong>1 unit</strong> in the last 12 months against 288 in stock (288 years of cover). It clears the "Excess" threshold on a technicality; functionally it's dead stock and should be reclassified.</p>
+  </div>
+</section>
+
+<section id="plan">
+  <div class="wrap">
+    <h2>Prioritized Action Plan</h2>
+    <p class="dek">Ordered by dollar impact relative to effort required.</p>
+
+    <div class="tbl-wrap">
+      <table class="plan-tbl">
+        <thead><tr><th>Priority</th><th>Action</th><th>Impact</th><th>Effort</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="prio p1">P1</span></td>
+            <td><strong>Launch a liquidation/return review for the top 10–20 excess SKUs</strong><br><span style="color:var(--muted);font-size:.85rem;">Starting with DW8515S ($147K) and DW11515S ($83K), which alone total $230K. Negotiate returns, discount-sell, or reallocate to faster-moving warehouses.</span></td>
+            <td>Frees roughly <strong>$0.5M</strong> across the top 10 excess SKUs</td>
+            <td>Medium</td>
+          </tr>
+          <tr>
+            <td><span class="prio p1">P1</span></td>
+            <td><strong>Create a formal save-plan for the two largest declining accounts</strong><br><span style="color:var(--muted);font-size:.85rem;">The two largest decliners (−$299K and −$137K) — direct account-management outreach, not a mass campaign.</span></td>
+            <td>Recoverable <strong>$436K</strong></td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td><span class="prio p1">P1</span></td>
+            <td><strong>Stand up a Top-30 key-account program</strong><br><span style="color:var(--muted);font-size:.85rem;">Formal account plans, review cadence, and early-warning alerts on spend drops for the accounts that drive 80% of revenue.</span></td>
+            <td>Protects <strong>~$3.1M</strong> revenue base</td>
+            <td>Medium</td>
+          </tr>
+          <tr>
+            <td><span class="prio p2">P2</span></td>
+            <td><strong>Fix reorder points / safety-stock rules</strong><br><span style="color:var(--muted);font-size:.85rem;">Root-cause the 65% overstock rate: likely fixed reorder quantities not scaled to actual sales velocity.</span></td>
+            <td>Prevents recurrence of the $1.95M problem</td>
+            <td>Medium</td>
+          </tr>
+          <tr>
+            <td><span class="prio p2">P2</span></td>
+            <td><strong>Investigate the 90-decliner cohort by segment</strong><br><span style="color:var(--muted);font-size:.85rem;">Beyond the top 2, find common causes (region, product, officer) behind the $759K decline.</span></td>
+            <td>Up to <strong>$323K</strong> further recovery</td>
+            <td>Medium</td>
+          </tr>
+          <tr>
+            <td><span class="prio p2">P2</span></td>
+            <td><strong>Diagnose the Sindh regional decline</strong><br><span style="color:var(--muted);font-size:.85rem;">−5.5% on the region carrying 64% of revenue needs root-cause: competitive pressure, officer coverage, or account-specific.</span></td>
+            <td>Protects <strong>$5.1M</strong> regional base</td>
+            <td>Medium</td>
+          </tr>
+          <tr>
+            <td><span class="prio p2">P2</span></td>
+            <td><strong>Build a single-account-dependency review for sales officers</strong><br><span style="color:var(--muted);font-size:.85rem;">Officer 3's $500K book on one customer, and Officer 12's outsized 28% share, both need a named backup contact and an account-handoff plan, not just a policy on paper.</span></td>
+            <td>De-risks <strong>$500K</strong> (Officer 3) up to <strong>$2.25M</strong> (Officer 12) if either departs unplanned</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td><span class="prio p3">P3</span></td>
+            <td><strong>Rationalize the Class-C SKU tail</strong><br><span style="color:var(--muted);font-size:.85rem;">245 SKUs generate 5% of revenue: evaluate discontinuation candidates by margin and stock-carrying cost.</span></td>
+            <td>Simplifies ops, minor revenue risk</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td><span class="prio p3">P3</span></td>
+            <td><strong>Data hygiene: merge "drapes"/"Drapes" at the source, map unassigned regions</strong><br><span style="color:var(--muted);font-size:.85rem;">This report merges them manually for reporting; fixing it in the source system means every future export is correct without a manual step.</span></td>
+            <td>Reporting accuracy</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td><span class="prio p3">P3</span></td>
+            <td><strong>Build seasonal planning around the April trough</strong><br><span style="color:var(--muted);font-size:.85rem;">Index 61 in both years: plan cash flow, stock builds, and officer targets around the known cycle.</span></td>
+            <td>Smoother operations</td>
+            <td>Low</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="notes" style="border-bottom:none;">
+  <div class="wrap">
+    <h2>Methodology &amp; Notes</h2>
+    <ul style="color:var(--muted); font-size:.88rem; padding-left:1.1rem;">
+      <li>Source: two sales extracts (2024–2025 full year; Jan–Feb 2026 partial) totaling 26,411 transaction line-items, plus a point-in-time stock export (403 SKUs, matched to sales via normalized product code).</li>
+      <li>Currency converted at a fixed 280 PKR/USD rate for illustration; does not reflect exchange-rate movement over the period.</li>
+      <li>Inventory value is <em>estimated</em> — stock quantity × trailing average selling price per SKU (85% of stocked SKUs matched to a sales-derived price; the remainder have no recent price reference).</li>
+      <li>"Days of Cover" = stock quantity ÷ (trailing-12-month sales quantity ÷ 365). SKUs with zero L12M sales are flagged "No Sales History" rather than assigned a cover figure.</li>
+      <li>2026 figures reflect January–February only and are not a full-year comparison.</li>
+      <li>SKU counts differ by scope: 596 is the full historical product catalog; 424 SKUs have sales history and are ABC-classified (Class A 80 + B 99 + C 245); 403 SKUs appear in the point-in-time stock export used for the inventory-risk section.</li>
+      <li>Revenue figures are rounded to two decimals for display (e.g. $3.59M, $3.83M); growth percentages (e.g. +6.5% YoY) are computed from the unrounded underlying totals, so they won't recompute exactly from the rounded figures shown.</li>
+      <li>All customer, officer, and warehouse identities are anonymized (Client N / Officer N); product identities use SKU codes only.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="note">Analysis built on the underlying Power BI semantic model (star schema, 50+ DAX measures). Figures here are independently cross-validated against the dashboard's live measures.</p>
+    <p class="note">Prepared by M.O. — Data &amp; BI Analyst.</p>
+  </div>
+</footer>

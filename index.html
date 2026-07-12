@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M.O. — Power BI &amp; Data Analytics Portfolio</title>
+<style>
+  :root {
+    --paper: #f6f3ec; --surface: #fffefa; --ink: #171713; --ink-2: #3b4038;
+    --muted: #6e6f61; --line: #e0dac9; --accent: #0f8a94; --accent-deep: #0b5b62;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper:#0d1316; --surface:#131b1f; --ink:#e9f1f1; --ink-2:#c2d0d2; --muted:#8ea1a7; --line:#223037; --accent:#35bcc7; --accent-deep:#8fe3ea; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--paper); color: var(--ink); font-family: system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; line-height: 1.6; }
+  .wrap { max-width: 40rem; margin: 0 auto; padding: 4.5rem 1.5rem; }
+  h1 { font-family: "Iowan Old Style","Charter","Georgia",serif; font-size: clamp(1.8rem,4vw,2.4rem); margin: 0 0 .6rem; }
+  p.lede { color: var(--ink-2); max-width: 42ch; margin: 0 0 2.4rem; }
+  .card { display:block; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1.4rem 1.6rem; margin-bottom: 1rem; text-decoration: none; color: inherit; }
+  .card:hover { border-color: var(--accent); }
+  .card .k { font-family: ui-monospace,"SFMono-Regular","Cascadia Code","Consolas",monospace; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-deep); }
+  .card h2 { font-family: "Iowan Old Style","Charter","Georgia",serif; font-size: 1.2rem; margin: .4rem 0 .4rem; }
+  .card p { color: var(--muted); font-size: .92rem; margin: 0; }
+  footer { margin-top: 2rem; font-size: .82rem; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Power BI &amp; Data Analytics — Portfolio</h1>
+    <p class="lede">Two views of the same project: a medical-consumables distributor's sales, customer, and inventory analytics build.</p>
+
+    <a class="card" href="case-study.html">
+      <div class="k">Case Study</div>
+      <h2>Turning 26,000 messy transactions into decisions</h2>
+      <p>The story of the build — data cleaning, modeling, the dashboard, and the headline findings — with real dashboard screenshots.</p>
+    </a>
+
+    <a class="card" href="business-analysis-report.html">
+      <div class="k">Analysis Report</div>
+      <h2>Sales, Customer &amp; Inventory Analysis</h2>
+      <p>The full work sample: a dollar-quantified findings report with a prioritized action plan.</p>
+    </a>
+
+    <footer>Prepared by M.O. — Power BI, DAX &amp; data modeling. All figures anonymized.</footer>
+  </div>
+</body>
+</html>
