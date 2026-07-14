@@ -140,7 +140,7 @@
   .bar-fill.warn { background: var(--warn); }
   .bar-fill.good { background: var(--good); }
   .bar-fill .v { font-family: var(--mono); font-size: .72rem; color: #fff; padding-right: .5rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .bar-val-out { font-family: var(--mono); font-size: .74rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .bar-track .vo { position:absolute; top:50%; transform:translateY(-50%); padding-left:.5rem; font-family: var(--mono); font-size: .72rem; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space:nowrap; }
 
   /* Concentration split bar */
   .split { display:flex; height: 2.6rem; border-radius: 7px; overflow: hidden; margin-top: .3rem; }
@@ -282,7 +282,7 @@
         <div class="ct">Annual revenue (USD, converted)</div>
         <div class="bar-row"><div class="bl">2024</div><div class="bar-track"><div class="bar-fill deep" style="width:93.8%"><span class="v">$3.59M</span></div></div></div>
         <div class="bar-row"><div class="bl">2025</div><div class="bar-track"><div class="bar-fill" style="width:100%"><span class="v">$3.83M</span></div></div></div>
-        <div class="bar-row"><div class="bl">2026 · Jan</div><div class="bar-track"><div class="bar-fill" style="width:16%"></div></div><div class="bar-val-out" style="grid-column:2; margin-top:-1.35rem; padding-left:.5rem; position:relative; left:16%; width:max-content;">$0.61M</div></div>
+        <div class="bar-row"><div class="bl">2026 · Jan</div><div class="bar-track"><div class="bar-fill" style="width:16%"></div><span class="vo" style="left:16%">$0.61M</span></div></div>
       </div>
     </div>
 
@@ -341,8 +341,8 @@
       <div class="chart">
         <div class="ct">Stock value by status (estimated)</div>
         <div class="bar-row"><div class="bl">Excess (&gt;90d)</div><div class="bar-track"><div class="bar-fill risk" style="width:100%"><span class="v">$1.6M</span></div></div></div>
-        <div class="bar-row"><div class="bl">OK / Short</div><div class="bar-track"><div class="bar-fill good" style="width:8.6%"><span class="v">$141K</span></div></div></div>
-        <div class="bar-row"><div class="bl">Dead stock</div><div class="bar-track"><div class="bar-fill warn" style="width:0.6%"></div></div><span class="v">$10K</span></div>
+        <div class="bar-row"><div class="bl">OK / Short</div><div class="bar-track"><div class="bar-fill good" style="width:8.6%"></div><span class="vo" style="left:8.6%">$141K</span></div></div>
+        <div class="bar-row"><div class="bl">Dead stock</div><div class="bar-track"><div class="bar-fill warn" style="width:0.6%"></div><span class="vo" style="left:0.6%">$10K</span></div></div>
       </div>
     </div>
   </div>
@@ -360,14 +360,14 @@
         <div class="ct">Revenue by region</div>
         <div class="bar-row"><div class="bl">Region A</div><div class="bar-track"><div class="bar-fill deep" style="width:100%"><span class="v">63.9%</span></div></div></div>
         <div class="bar-row"><div class="bl">Region B</div><div class="bar-track"><div class="bar-fill" style="width:41.5%"><span class="v">26.5%</span></div></div></div>
-        <div class="bar-row"><div class="bl">Region C</div><div class="bar-track"><div class="bar-fill" style="width:14.7%"><span class="v">9.4%</span></div></div></div>
+        <div class="bar-row"><div class="bl">Region C</div><div class="bar-track"><div class="bar-fill" style="width:14.7%"></div><span class="vo" style="left:14.7%">9.4%</span></div></div>
       </div>
       <div class="chart">
         <div class="ct">Revenue by product category</div>
         <div class="bar-row"><div class="bl">Sutures</div><div class="bar-track"><div class="bar-fill deep" style="width:100%"><span class="v">39%</span></div></div></div>
         <div class="bar-row"><div class="bl">Drapes</div><div class="bar-track"><div class="bar-fill" style="width:77%"><span class="v">30%</span></div></div></div>
         <div class="bar-row"><div class="bl">CSSD</div><div class="bar-track"><div class="bar-fill" style="width:26%"><span class="v">10%</span></div></div></div>
-        <div class="bar-row"><div class="bl">Gowns</div><div class="bar-track"><div class="bar-fill" style="width:13%"><span class="v">5%</span></div></div></div>
+        <div class="bar-row"><div class="bl">Gowns</div><div class="bar-track"><div class="bar-fill" style="width:13%"></div><span class="vo" style="left:13%">5%</span></div></div>
         <div class="bar-row"><div class="bl">Other</div><div class="bar-track"><div class="bar-fill" style="width:41%"><span class="v">16%</span></div></div></div>
       </div>
     </div>
